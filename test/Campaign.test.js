@@ -76,4 +76,55 @@ describe("Campaigns", () => {
 
     assert.equal("Test transaction", request.description);
   });
+
+  it("Processes requests", async () => {
+    await campaign.methods.contribute().send({
+      from: accounts[0],
+      value: web3.utils.toWei("10", "ether"),
+    });
+    await campaign.methods.contribute().send({
+      from: accounts[1],
+      value: web3.utils.toWei("10", "ether"),
+    });
+    await campaign.methods.contribute().send({
+      from: accounts[2],
+      value: web3.utils.toWei("10", "ether"),
+    });
+
+    await campaign.methods
+      .createRequest(
+        "Test transaction",
+        web3.utils.toWei("20", "ether"),
+        accounts[1]
+      )
+      .send({ from: accounts[0], gas: "1000000" });
+
+    await campaign.methods.approveRequest(0).send({
+      from: accounts[0],
+      gas: 1000000,
+    });
+    await campaign.methods.approveRequest(0).send({
+      from: accounts[1],
+      gas: 1000000,
+    });
+    await campaign.methods.approveRequest(0).send({
+      from: accounts[2],
+      gas: 1000000,
+    });
+
+    let balanceBefore = await web3.eth.getBalance(accounts[1]);
+    balanceBefore = web3.utils.fromWei(balanceBefore, "ether");
+    balanceBefore = parseFloat(balanceBefore);
+
+    await campaign.methods.finalizeRequest(0).send({
+      from: accounts[0],
+      gas: 1000000,
+    });
+
+    let balanceAfter = await web3.eth.getBalance(accounts[1]);
+    balanceAfter = web3.utils.fromWei(balanceAfter, "ether");
+    balanceAfter = parseFloat(balanceAfter);
+
+    assert(balanceAfter > balanceBefore + 19);
+  });
 });
