@@ -4,5 +4,5 @@ node_modules
 # next.js build
 .next
 
-# test file to understand how gitignore works
-test.txt
+# Configuration privates
+next.config.js
