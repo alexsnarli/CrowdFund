@@ -3,8 +3,9 @@ import Layout from "../../components/layout";
 import { Button, Checkbox, Form, Input, Message } from "semantic-ui-react";
 import factory from "../../ethereum/factory";
 import web3 from "../../ethereum/web3";
+import Router from "next/router";
 
-class campaignNew extends Component {
+class CampaignNew extends Component {
   state = {
     minimumContribution: "",
     errMessage: "",
@@ -24,6 +25,7 @@ class campaignNew extends Component {
         .send({
           from: accounts[0],
         });
+      Router.push("/");
     } catch (err) {
       this.setState({ errMessage: err.message });
     }
@@ -61,4 +63,4 @@ class campaignNew extends Component {
   }
 }
 
-export default campaignNew;
+export default CampaignNew;
