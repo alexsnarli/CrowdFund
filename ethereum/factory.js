@@ -3,7 +3,7 @@ import CampaignFactory from "./build/CampaignFactory.json";
 
 const instance = new web3.eth.Contract(
   JSON.parse(CampaignFactory.interface),
-  '' // prettier-ignore
+  '0xe72594ea761718f1d244d8a18e9edaea2f8f3350' // prettier-ignore
   //insert contract address above
 );
 
