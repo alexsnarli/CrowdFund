@@ -83,4 +83,18 @@ contract Campaign {
 
         request.complete == true;
     }
+
+    function getSummary() public view returns (uint256, uint256, uint256, uint256, address) {
+        return(
+            minimumContribution, // minimum contribution
+            this.balance, // balance of contract
+            requests.length, // number of pending requests
+            numContributors, // number of contributors
+            manager //return manager address
+        );
+    }
+
+    function getRequestsCount() public view returns (uint256) {
+        return requests.length;
+    }
 }
