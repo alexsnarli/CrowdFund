@@ -19,15 +19,12 @@ class ContributeForm extends Component {
     const campaign = Campaign(this.props.address);
 
     try {
-      //await ethereum.enable();
       const accounts = await web3.eth.getAccounts();
       await campaign.methods.contribute().send({
         from: accounts[0],
         value: web3.utils.toWei(this.state.value, "ether"),
       });
-      console.log("done contributing, should refresh");
-      Router.pushRoute(`/campaigns/${this.props.address}`);
-      console.log("refresh completed");
+      Router.reload(`/campaigns/${this.props.address}`);
     } catch (err) {
       this.setState({ errMessage: err.message });
     }
@@ -46,10 +43,12 @@ class ContributeForm extends Component {
             value={this.state.value}
             onChange={(event) => this.setState({ value: event.target.value })}
           />
-          <Button loading={this.state.loading} primary type="submit">
-            Contribute!
-          </Button>
         </Form.Field>
+        <Message error header="Oops!" content={this.state.errMessage} />
+
+        <Button loading={this.state.loading} primary type="submit">
+          Contribute!
+        </Button>
       </Form>
     );
   }
