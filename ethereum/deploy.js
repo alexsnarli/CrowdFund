@@ -3,10 +3,10 @@ const Web3 = require("web3");
 const compiledFactory = require("./build/CampaignFactory.json");
 
 // INSERT YOUR MNEMONIC HERE
-const MNEMONIC = process.env.mnemonicPhrase;
+const MNEMONIC = "";
 
 // insert your infura connection point here
-const INFURA_CONNECTION = process.env.infuraURL;
+const INFURA_CONNECTION = "";
 
 const provider = new HDWalletProvider(MNEMONIC, INFURA_CONNECTION);
 const web3 = new Web3(provider);
