@@ -92,7 +92,7 @@ class RequestNew extends Component {
           <Message error header="Oops!" content={this.state.errMessage} />
 
           <Button loading={this.state.loading} primary type="submit">
-            Create campaign!
+            Create request!
           </Button>
           <Link href={`/campaigns/${this.props.address}/requests`}>
             <Button floated="right"> Back to requests </Button>

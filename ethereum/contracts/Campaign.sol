@@ -31,7 +31,7 @@ contract Campaign {
     uint256 public minimumContribution;
     mapping(address => bool) public approvers;
     Request[] public requests;
-    uint256 numContributors;
+    uint256 public numContributors;
 
     function Campaign(uint256 _minimumContribution, address creator) public {
         manager = creator;
