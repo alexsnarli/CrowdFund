@@ -33,7 +33,7 @@ class RequestIndex extends Component {
     return this.props.requests.map((request, index) => {
       return (
         <RequestRow
-          approvers={approversCount}
+          approvers={this.props.approversCount}
           key={index}
           id={index}
           request={request}

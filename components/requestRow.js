@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Table, Form, Message, Button } from "semantic-ui-react";
 import Link from "next/link";
 import web3 from "../ethereum/web3";
+import Campaign from "../ethereum/campaign";
 
 class RequestRow extends Component {
   state = {
@@ -9,29 +10,28 @@ class RequestRow extends Component {
     errMessage: "",
   };
 
-  onApprove = async (event) => {
-    event.preventDefault();
+  onApprove = async () => {
+    const campaign = Campaign(this.props.address);
+    const accounts = await web3.eth.getAccounts();
 
-    this.setState({ loading: true, errMessage: "" });
+    await campaign.methods
+      .approveRequest(this.props.id)
+      .send({ from: accounts[0] });
+  };
 
-    try {
-      const accounts = await web3.eth.getAccounts();
-      const campaign = Campaign(this.props.address);
+  onFinalize = async () => {
+    const campaign = Campaign(this.props.address);
+    const accounts = await web3.eth.getAccounts();
 
-      await campaign.methods.approveRequest(this.props.id).send({
-        from: accounts[0],
-      });
-
-      Router.push(`/campaigns/${this.props.address}/requests`);
-    } catch (err) {
-      this.setState({ errMessage: err.message });
-    }
-    this.setState({ loading: false });
+    await campaign.methods
+      .finalizeRequest(this.props.id)
+      .send({ from: accounts[0] });
   };
 
   render() {
     const { Row, Cell } = Table;
-    const { id, request } = this.props;
+    const { id, request, approvers } = this.props;
+    const readyToFinalize = request.approvalCount >= approvers / 2;
     return (
       <Row>
         <Cell>{id}</Cell>
@@ -39,24 +39,31 @@ class RequestRow extends Component {
         <Cell>{web3.utils.fromWei(request.value, "ether")}</Cell>
         <Cell>{request.recipient}</Cell>
         <Cell>
-          {request.approvalCount} / {this.props.approversCount}
+          {request.approvalCount} / {approvers}
         </Cell>
         <Cell>
-          <Form onSubmit={this.onApprove(id)} error={!!this.state.errMessage}>
-            <Message error header="Oops!" content={this.state.errMessage} />
-            <Button loading={this.state.loading} color="green" type="submit">
+          {request.complete ? null : (
+            <Button
+              loading={this.state.loading}
+              color="green"
+              basic
+              onClick={this.onApprove}
+            >
               Approve request
             </Button>
-          </Form>
+          )}
         </Cell>
-
         <Cell>
-          <Form onSubmit={this.onFinalize} error={!!this.state.errMessage}>
-            <Message error header="Oops!" content={this.state.errMessage} />
-            <Button loading={this.state.loading} color="red" type="submit">
+          {request.complete ? null : readyToFinalize ? (
+            <Button
+              loading={this.state.loading}
+              color="teal"
+              basic
+              onClick={this.onFinalize}
+            >
               Finalize request
             </Button>
-          </Form>
+          ) : null}
         </Cell>
       </Row>
     );

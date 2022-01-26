@@ -83,7 +83,7 @@ contract Campaign {
 
         request.recipient.transfer(request.value);
 
-        request.complete == true;
+        request.complete = true;
     }
 
     function getSummary() public view returns (uint256, uint256, uint256, uint256, address) {
